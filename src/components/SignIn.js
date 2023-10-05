@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useFirebase } from "../context/Firebase";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { signIn } = useFirebase();
 
   return (
     <div>
@@ -25,7 +27,7 @@ function SignIn() {
         required
         placeholder="Password"
       />
-      <button>Sign In</button>
+      <button onClick={() => signIn(email, password)}>Sign In</button>
     </div>
   );
 }

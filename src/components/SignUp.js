@@ -4,7 +4,7 @@ import { useFirebase } from "../context/Firebase";
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signUp, putData } = useFirebase();
+  const { signUp, putData, signinWithGoggle } = useFirebase();
 
   return (
     <div>
@@ -27,6 +27,7 @@ function SignUp() {
         required
         placeholder="Password"
       />
+      <button onClick={signinWithGoggle}>SignIn with google</button>
       <button
         onClick={() => {
           signUp(email, password);

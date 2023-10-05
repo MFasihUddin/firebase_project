@@ -1,9 +1,17 @@
 import { createContext, useContext } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
 
 const FirebaseContext = createContext();
+
+const googleProvider = new GoogleAuthProvider();
 
 //firebase stuff...
 const firebaseConfig = {
@@ -23,11 +31,21 @@ const database = getDatabase(firebaseApp);
 
 const FirebaseProvider = ({ children }) => {
   const signUp = (email, password) => {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password);
+    createUserWithEmailAndPassword(firebaseAuth, email, password);
+  };
+  const signinWithGoggle = () => {
+    signInWithPopup(firebaseAuth, googleProvider);
+  };
+  const signIn = (email, password) => {
+    signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then((res) => console.log("logged in Successfully"))
+      .catch((err) => console.log(err));
   };
   const putData = (key, data) => set(ref(database, key), data);
   return (
-    <FirebaseContext.Provider value={{ signUp, putData }}>
+    <FirebaseContext.Provider
+      value={{ signUp, signIn, putData, firebaseAuth, signinWithGoggle }}
+    >
       {children}
     </FirebaseContext.Provider>
   );
