@@ -1,25 +1,12 @@
 import "./App.css";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { app } from "./firebase";
+import Firestore from "./Practice/Firestore";
 
-const firestore = getFirestore(app);
-
-const writeData = () => {
-  addDoc(collection(firestore, "cities"), {
-    name: "peshawar",
-    pinCode: 25000,
-    lat: 34,
-    long: 71,
-  });
-};
-
-function App() {
+function firestore() {
   return (
     <div className="App">
-      <h2>fireStore</h2>
-      <buuton onClick={writeData}>put data</buuton>
+      <Firestore />
     </div>
   );
 }
 
-export default App;
+export default firestore;
