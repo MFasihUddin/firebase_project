@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -30,7 +30,6 @@ const database = getDatabase(firebaseApp);
 //...
 
 const FirebaseProvider = ({ children }) => {
-  const [name, setName] = useState();
   //authentication
   const signUp = (email, password) => {
     createUserWithEmailAndPassword(firebaseAuth, email, password);
@@ -50,17 +49,16 @@ const FirebaseProvider = ({ children }) => {
     console.log(snapshot.val())
   );
 
-  useEffect(() => {
-    onValue(ref(database, "grandfather/father/child"), (snapshot) => {
-      setName(snapshot.val().name);
-    });
-  }, []);
+  // useEffect(() => {
+  //   onValue(ref(database, "grandfather/father/child"), (snapshot) => {
+  //     console.log(snapshot.val().name);
+  //   });
+  // }, []);
 
   return (
     <FirebaseContext.Provider
       value={{ signUp, signIn, putData, firebaseAuth, signinWithGoggle }}
     >
-      <h3>name is {name}</h3>
       {children}
     </FirebaseContext.Provider>
   );
