@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -7,7 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { getDatabase, ref, set, get, child } from "firebase/database";
+import { getDatabase, ref, set, get, child, onValue } from "firebase/database";
 
 const FirebaseContext = createContext();
 
@@ -30,6 +30,8 @@ const database = getDatabase(firebaseApp);
 //...
 
 const FirebaseProvider = ({ children }) => {
+  const [name, setName] = useState();
+  //authentication
   const signUp = (email, password) => {
     createUserWithEmailAndPassword(firebaseAuth, email, password);
   };
@@ -41,11 +43,24 @@ const FirebaseProvider = ({ children }) => {
       .then((res) => console.log("logged in Successfully"))
       .catch((err) => console.log(err));
   };
+  //related to realtime database
   const putData = (key, data) => set(ref(database, key), data);
+
+  get(child(ref(database), "root/a")).then((snapshot) =>
+    console.log(snapshot.val())
+  );
+
+  useEffect(() => {
+    onValue(ref(database, "grandfather/father/child"), (snapshot) => {
+      setName(snapshot.val().name);
+    });
+  }, []);
+
   return (
     <FirebaseContext.Provider
       value={{ signUp, signIn, putData, firebaseAuth, signinWithGoggle }}
     >
+      <h3>name is {name}</h3>
       {children}
     </FirebaseContext.Provider>
   );
